@@ -8,6 +8,7 @@ from django.db import IntegrityError
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect, render, reverse
 
+from .forms import MileageForm, PartFormSet, ReminderForm, ServiceForm
 from .models import Car, Fuel, MileageLog, Part, Reminder, Service, User
 
 # Create your views here.
@@ -129,19 +130,15 @@ def car_mileage_view(request):
     # Mileage log form submission
     if request.method == "POST":
 
-        # Parse form data
-        mileage = request.POST["mileage"]
-        fuel = request.POST["fuel"]
-        fuel = round(float(fuel), 2)
-        log_date = request.POST["date"]
-        month, day, year = int(log_date[0:2]), int(log_date[3:5]), int(log_date[6:10])
-        log_date = date(year=year, month=month, day=day)
+        form = MileageForm(request.POST)
 
-        # Create new mileage/fuel log
-        log = MileageLog(timestamp=log_date, mileage=mileage, car=car)
-        log.save()
-        fuel = Fuel(amount=fuel, log=log)
-        fuel.save()
+        if form.is_valid():
+            data = form.cleaned_data
+            # Create new mileage/fuel log
+            log = MileageLog(timestamp=data["date"], mileage=data["mileage"], car=car)
+            log.save()
+            fuel = Fuel(amount=data["fuel"], log=log)
+            fuel.save()
 
         return redirect(reverse("car_mileage"))
 
@@ -156,6 +153,7 @@ def car_mileage_view(request):
             {
                 "car": car,
                 "overdue_reminders": overdue_reminders,
+                "mileage_form": MileageForm,
             },
         )
 
@@ -171,69 +169,41 @@ def car_service_view(request):
     # New submission from service form
     if request.method == "POST":
 
-        # Ensure minimum form data received
-        if (
-            not request.POST["date"]
-            or not request.POST["mileage"]
-            or not request.POST["service"]
-        ):
+        service_form = ServiceForm(request.POST, prefix="service")
+        parts_form = PartFormSet(request.POST, prefix="part")
+        reminder_form = ReminderForm(request.POST, prefix="reminder")
+
+        if not all(f.is_valid() for f in (service_form, parts_form, reminder_form)):
+            # TODO: Present an error to the user here
             return redirect(reverse("car_service"))
 
-        # Parse date (MM/DD/YYYY)
-        form_date = request.POST["date"]
-        month, day, year = (
-            int(form_date[0:2]),
-            int(form_date[3:5]),
-            int(form_date[6:10]),
+        service_data = service_form.cleaned_data
+        parts_data = parts_form.cleaned_data
+        reminder_data = reminder_form.cleaned_data
+        print(service_data, parts_data, reminder_data)
+
+        mile_log = MileageLog(
+            timestamp=service_data["date"], mileage=service_data["mileage"], car=car
         )
-        log_date = date(year=year, month=month, day=day)
-
-        # Parse mileage (positive integer)
-        mileage = int(request.POST["mileage"])
-        mile_log = MileageLog(timestamp=log_date, mileage=mileage, car=car)
         mile_log.save()
-
-        # Create service
-        service_name = request.POST["service"]
-        service = Service(name=service_name, log=mile_log)
+        service = Service(name=service_data["name"], log=mile_log)
         service.save()
 
-        # Get or create parts
-        form_parts = {
-            key: val for key, val in request.POST.items() if key.startswith("part")
-        }
-        num_parts = len(form_parts) // 2
-        for i in range(num_parts):
-            part_name = form_parts[f"part-name-{i+1}"]
-            if part_name:
-                part_number = form_parts[f"part-number-{i+1}"]
-                part, created = Part.objects.get_or_create(
-                    name=part_name, number=part_number
-                )
-                part.services.add(service)
+        for part in parts_data:
+            part, created = Part.objects.get_or_create(
+                name=part["name"], number=part["number"]
+            )
+            part.services.add(service)
 
-        # Create reminder
-        if request.POST["duration"] or request.POST["mile-amount"]:
+        if reminder_data["duration"] or reminder_data["miles"]:
             reminder = Reminder(service=service)
-            if request.POST["duration"]:
-                duration = int(365 * (int(request.POST["duration"]) / 12))
-                reminder_date = log_date + timedelta(days=duration)
+            if reminder_data["duration"]:
+                duration = int(365 * (int(reminder_data["duration"]) / 12))
+                reminder_date = service_data["date"] + timedelta(days=duration)
                 reminder.date = reminder_date
-            if request.POST["mile-amount"]:
-                mile_amount = int(request.POST["mile-amount"])
-                reminder_mile = mileage + mile_amount
-                reminder.mileage = reminder_mile
+            if reminder_data["miles"]:
+                reminder.mileage = reminder_data["miles"]
             reminder.save()
-
-        # Update previous reminder complete
-        if request.POST["reminder-id"]:
-            rem_id = request.POST["reminder-id"]
-            try:
-                past_rem = Reminder.objects.get(id=rem_id, service__log__car=car)
-                past_rem.completed = True
-                past_rem.save()
-            except Reminder.DoesNotExist:
-                pass
 
         return redirect(reverse("car_service"))
 
@@ -255,6 +225,9 @@ def car_service_view(request):
                 "past_service_logs": past_service_logs,
                 "upcoming_reminders": upcoming_reminders,
                 "overdue_reminders": overdue_reminders,
+                "service_form": ServiceForm,
+                "part_form": PartFormSet(prefix="part"),
+                "reminder_form": ReminderForm,
             },
         )
 

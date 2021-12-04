@@ -1,5 +1,6 @@
 from datetime import date, timedelta
 
+from django import utils
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.db.models import F, Q
@@ -101,7 +102,7 @@ class Car(models.Model):
 
 
 class MileageLog(models.Model):
-    timestamp = models.DateField(default=date.today())
+    timestamp = models.DateField(default=utils.timezone.now)
     mileage = models.PositiveIntegerField()
     car = models.ForeignKey("Car", on_delete=models.CASCADE, related_name="logs")
 

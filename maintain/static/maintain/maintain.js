@@ -43,30 +43,11 @@ if (document.getElementById("addPartBtn")) {
 
 function addPart() {
 
-    // Grab the part group div and determine number of existing parts
-    const form = document.getElementById("service-form");
-    const partGroup = form.querySelector("#part-group");
-    const numPart = partGroup.childElementCount + 1;
+    var form_idx = $('#id_form-TOTAL_FORMS').val();
 
-    // Clone the first part element
-    let part = partGroup.firstElementChild.cloneNode(true)
-    let inputs = part.getElementsByTagName("input")
-    for (let input of inputs) {
+	  $('#form_set').append($('#empty_form').html().replace(/__prefix__/g, form_idx));
 
-        // Get the input's name attribute
-        let name = input.name;
-
-        // Change the name attribute based on new part num
-        let pos = name.lastIndexOf("-");
-        name = name.slice(0, pos+1) + numPart.toString();
-
-        // Set new name and reset value if present
-        input.name = name;
-        input.value = "";
-    }
-
-    // Add part to end of partGroup
-    partGroup.append(part)
+	  $('#id_form-TOTAL_FORMS').val(parseInt(form_idx) + 1);
 }
 
 /* Fetch a reminder's info and call fillServiceForm */
