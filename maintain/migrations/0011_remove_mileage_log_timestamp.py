@@ -6,12 +6,12 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('maintain', '0010_mileage_log_timestamp_date'),
+        ("maintain", "0010_mileage_log_timestamp_date"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='mileage_log',
-            name='timestamp',
+            model_name="mileage_log",
+            name="timestamp",
         ),
     ]

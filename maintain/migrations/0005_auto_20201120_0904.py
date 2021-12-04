@@ -6,38 +6,44 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('maintain', '0004_auto_20201119_1358'),
+        ("maintain", "0004_auto_20201119_1358"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='car',
-            name='purchase_date',
+            model_name="car",
+            name="purchase_date",
             field=models.DateField(blank=True, null=True),
         ),
         migrations.AlterField(
-            model_name='car',
-            name='starting_mileage',
+            model_name="car",
+            name="starting_mileage",
             field=models.CharField(blank=True, max_length=6, null=True),
         ),
         migrations.AlterField(
-            model_name='mileage_log',
-            name='gas_amount',
-            field=models.DecimalField(blank=True, decimal_places=2, max_digits=5, null=True),
+            model_name="mileage_log",
+            name="gas_amount",
+            field=models.DecimalField(
+                blank=True, decimal_places=2, max_digits=5, null=True
+            ),
         ),
         migrations.AlterField(
-            model_name='part',
-            name='logs',
-            field=models.ManyToManyField(blank=True, null=True, related_name='parts', to='maintain.MileageLog'),
+            model_name="part",
+            name="logs",
+            field=models.ManyToManyField(
+                blank=True, null=True, related_name="parts", to="maintain.MileageLog"
+            ),
         ),
         migrations.AlterField(
-            model_name='part',
-            name='number',
+            model_name="part",
+            name="number",
             field=models.CharField(blank=True, max_length=50, null=True),
         ),
         migrations.AlterField(
-            model_name='part',
-            name='services',
-            field=models.ManyToManyField(blank=True, null=True, related_name='parts', to='maintain.Service'),
+            model_name="part",
+            name="services",
+            field=models.ManyToManyField(
+                blank=True, null=True, related_name="parts", to="maintain.Service"
+            ),
         ),
     ]

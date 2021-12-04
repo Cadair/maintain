@@ -2,11 +2,14 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .models import User, Car, MileageLog, Fuel, Service, Part, Reminder
 
+
 class CarAdmin(admin.ModelAdmin):
     list_display = ["owner", "id", "make", "model", "default"]
 
+
 class LogAdmin(admin.ModelAdmin):
     list_display = ["timestamp", "car", "mileage"]
+
 
 # Register your models here.
 

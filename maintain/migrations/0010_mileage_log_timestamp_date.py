@@ -7,13 +7,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('maintain', '0009_car_default'),
+        ("maintain", "0009_car_default"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='mileage_log',
-            name='timestamp_date',
+            model_name="mileage_log",
+            name="timestamp_date",
             field=models.DateField(default=datetime.date(2020, 12, 10)),
         ),
     ]

@@ -12,7 +12,8 @@ from .models import User, Car, MileageLog, Fuel, Service, Part, Reminder
 
 # Create your views here.
 
-@login_required(login_url='login')
+
+@login_required(login_url="login")
 def index(request):
 
     # Add new car
@@ -29,7 +30,15 @@ def index(request):
         purchase_date = date(year=year, month=month, day=day)
 
         # Create new car and add to session
-        car = Car(vin=vin, make=make, model=model, year=year, purchase_date=purchase_date, purchase_mileage=starting_mile, owner=request.user)
+        car = Car(
+            vin=vin,
+            make=make,
+            model=model,
+            year=year,
+            purchase_date=purchase_date,
+            purchase_mileage=starting_mile,
+            owner=request.user,
+        )
         car.save()
 
         # Create first mileage log
@@ -47,25 +56,32 @@ def index(request):
 
         # Get all cars owned by user
         cars = request.user.cars.all()
-        return render(request, "maintain/index.html", {
-            "cars": cars,
-        })
+        return render(
+            request,
+            "maintain/index.html",
+            {
+                "cars": cars,
+            },
+        )
+
 
 def login_view(request):
     if request.method == "POST":
-        username = request.POST['username']
-        password = request.POST['password']
+        username = request.POST["username"]
+        password = request.POST["password"]
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
             return redirect(reverse(index))
         else:
-            return render(request, "maintain/login.html", {
-                "alert": "warning",
-                "alert_message": "Invalid username or password"
-            })
+            return render(
+                request,
+                "maintain/login.html",
+                {"alert": "warning", "alert_message": "Invalid username or password"},
+            )
     else:
         return render(request, "maintain/login.html")
+
 
 def register_view(request):
     if request.method == "POST":
@@ -75,30 +91,34 @@ def register_view(request):
         password = request.POST["password"]
         confirmation = request.POST["confirmation"]
         if password != confirmation:
-            return render(request, "maintain/register.html", {
-                "alert": "warning",
-                "alert_message": "Passwords must match"
-            })
+            return render(
+                request,
+                "maintain/register.html",
+                {"alert": "warning", "alert_message": "Passwords must match"},
+            )
 
         # Create new user
         try:
             user = User.objects.create_user(username=username, password=password)
             user.save()
         except IntegrityError:
-            return render(request, "maintain/register.html", {
-                "alert": "warning",
-                "alert_message": "Username not available"
-            })
+            return render(
+                request,
+                "maintain/register.html",
+                {"alert": "warning", "alert_message": "Username not available"},
+            )
         login(request, user)
         return redirect(reverse("index"))
     else:
         return render(request, "maintain/register.html")
 
+
 def logout_view(request):
     logout(request)
     return redirect(reverse(index))
 
-@login_required(login_url='login')
+
+@login_required(login_url="login")
 def car_mileage_view(request):
 
     # Get car from session
@@ -123,19 +143,24 @@ def car_mileage_view(request):
         fuel = Fuel(amount=fuel, log=log)
         fuel.save()
 
-        return redirect(reverse('car_mileage'))
+        return redirect(reverse("car_mileage"))
 
     # Return mileage page
     else:
 
         # Get overdue reminders (for alert)
         overdue_reminders = car.get_reminders_overdue
-        return render(request, "maintain/car_mileage.html", {
-            "car": car,
-            "overdue_reminders": overdue_reminders,
-        })
+        return render(
+            request,
+            "maintain/car_mileage.html",
+            {
+                "car": car,
+                "overdue_reminders": overdue_reminders,
+            },
+        )
 
-@login_required(login_url='login')
+
+@login_required(login_url="login")
 def car_service_view(request):
 
     # Get car from session
@@ -147,12 +172,20 @@ def car_service_view(request):
     if request.method == "POST":
 
         # Ensure minimum form data received
-        if not request.POST["date"] or not request.POST["mileage"] or not request.POST["service"]:
+        if (
+            not request.POST["date"]
+            or not request.POST["mileage"]
+            or not request.POST["service"]
+        ):
             return redirect(reverse("car_service"))
 
         # Parse date (MM/DD/YYYY)
         form_date = request.POST["date"]
-        month, day, year = int(form_date[0:2]), int(form_date[3:5]), int(form_date[6:10])
+        month, day, year = (
+            int(form_date[0:2]),
+            int(form_date[3:5]),
+            int(form_date[6:10]),
+        )
         log_date = date(year=year, month=month, day=day)
 
         # Parse mileage (positive integer)
@@ -166,13 +199,17 @@ def car_service_view(request):
         service.save()
 
         # Get or create parts
-        form_parts = {key: val for key, val in request.POST.items() if key.startswith("part")}
-        num_parts = len(form_parts)//2
+        form_parts = {
+            key: val for key, val in request.POST.items() if key.startswith("part")
+        }
+        num_parts = len(form_parts) // 2
         for i in range(num_parts):
-            part_name = form_parts[f'part-name-{i+1}']
+            part_name = form_parts[f"part-name-{i+1}"]
             if part_name:
-                part_number = form_parts[f'part-number-{i+1}']
-                part, created = Part.objects.get_or_create(name=part_name, number=part_number)
+                part_number = form_parts[f"part-number-{i+1}"]
+                part, created = Part.objects.get_or_create(
+                    name=part_name, number=part_number
+                )
                 part.services.add(service)
 
         # Create reminder
@@ -211,14 +248,19 @@ def car_service_view(request):
         overdue_reminders = car.get_reminders_overdue
 
         # Return car service page
-        return render(request, "maintain/car_service.html", {
-            "past_service_logs": past_service_logs,
-            "upcoming_reminders": upcoming_reminders,
-            "overdue_reminders": overdue_reminders,
-        })
+        return render(
+            request,
+            "maintain/car_service.html",
+            {
+                "past_service_logs": past_service_logs,
+                "upcoming_reminders": upcoming_reminders,
+                "overdue_reminders": overdue_reminders,
+            },
+        )
+
 
 def set_default_car(request, car_id):
-    """ JS: Set the default car clicked by user """
+    """JS: Set the default car clicked by user"""
     try:
         car = request.user.cars.get(pk=car_id)
     except:
@@ -228,8 +270,9 @@ def set_default_car(request, car_id):
     update_default_car(request, car)
     return HttpResponse(status=200)
 
+
 def update_default_car(request, car):
-    """ Helper: Set/update car in the database and request session """
+    """Helper: Set/update car in the database and request session"""
 
     # Check database for previous default car and clear
     def_car = request.user.default_car
@@ -242,10 +285,11 @@ def update_default_car(request, car):
     car.save()
 
     # Store in session
-    request.session['default_car'] = car.id
+    request.session["default_car"] = car.id
+
 
 def get_default_car(request):
-    """ Helper: Return car object from id stored in session """
+    """Helper: Return car object from id stored in session"""
     try:
         car_id = request.session.get("default_car")
         car = request.user.cars.get(pk=car_id)
@@ -253,8 +297,9 @@ def get_default_car(request):
     except Car.DoesNotExist:
         return None
 
+
 def mileage_logs(request):
-    """ JS: Return mileage log data used for plotting """
+    """JS: Return mileage log data used for plotting"""
     if request.method == "PUT":
 
         # Load request data
@@ -273,19 +318,20 @@ def mileage_logs(request):
                 logs = car.get_logs
                 obj = {
                     "label": f"{car.make} {car.model}",
-                    "data": [{"x": str(log.timestamp), "y": log.mileage} for log in logs]
-                    }
+                    "data": [
+                        {"x": str(log.timestamp), "y": log.mileage} for log in logs
+                    ],
+                }
                 data.append(obj)
             return JsonResponse(json.dumps(data), safe=False)
 
     # PUT method required
     else:
-        return JsonResponse({
-            "error": "PUT request required."
-        }, status=400)
+        return JsonResponse({"error": "PUT request required."}, status=400)
+
 
 def service_data(request):
-    """ JS: Return reminder data to pre-fill service form """
+    """JS: Return reminder data to pre-fill service form"""
     if request.method == "PUT":
 
         # Load request data and grab reminder id
@@ -305,12 +351,11 @@ def service_data(request):
 
     # PUT method required
     else:
-        return JsonResponse({
-            "error": "PUT request required."
-        }, status=400)
+        return JsonResponse({"error": "PUT request required."}, status=400)
+
 
 def csv_data(request):
-    """ Return csv file object for default car's past services """
+    """Return csv file object for default car's past services"""
 
     # Get car from session
     car = get_default_car(request)
@@ -322,7 +367,7 @@ def csv_data(request):
     header_row = ["Vehicle", "Date", "Mileage", "Service Name", "Parts"]
     csv_rows = []
     for log in past_service_logs:
-        row =[log.car, log.timestamp, log.mileage]
+        row = [log.car, log.timestamp, log.mileage]
         service = log.services.get()
         row.append(service.name)
         parts = ""
@@ -334,8 +379,8 @@ def csv_data(request):
 
     # https://docs.djangoproject.com/en/3.1/howto/outputting-csv/#using-the-python-csv-library
     # Create the HttpResponse object with the appropriate CSV header.
-    response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="service_log.csv"'
+    response = HttpResponse(content_type="text/csv")
+    response["Content-Disposition"] = 'attachment; filename="service_log.csv"'
     writer = csv.writer(response)
     writer.writerow(header_row)
     writer.writerows(csv_rows)

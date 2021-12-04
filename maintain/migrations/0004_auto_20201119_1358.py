@@ -7,54 +7,100 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('maintain', '0003_car_default'),
+        ("maintain", "0003_car_default"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='MileageLog',
+            name="MileageLog",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('timestamp', models.DateTimeField(auto_created=True)),
-                ('mileage', models.PositiveIntegerField()),
-                ('gas_amount', models.DecimalField(blank=True, decimal_places=2, max_digits=5)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("timestamp", models.DateTimeField(auto_created=True)),
+                ("mileage", models.PositiveIntegerField()),
+                (
+                    "gas_amount",
+                    models.DecimalField(blank=True, decimal_places=2, max_digits=5),
+                ),
             ],
         ),
         migrations.RemoveField(
-            model_name='car',
-            name='mileage',
+            model_name="car",
+            name="mileage",
         ),
         migrations.AddField(
-            model_name='car',
-            name='starting_mileage',
+            model_name="car",
+            name="starting_mileage",
             field=models.CharField(blank=True, max_length=6),
         ),
         migrations.AlterField(
-            model_name='car',
-            name='purchase_date',
+            model_name="car",
+            name="purchase_date",
             field=models.DateField(blank=True),
         ),
         migrations.CreateModel(
-            name='Service',
+            name="Service",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=50)),
-                ('logs', models.ManyToManyField(related_name='services', to='maintain.MileageLog')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=50)),
+                (
+                    "logs",
+                    models.ManyToManyField(
+                        related_name="services", to="maintain.MileageLog"
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Part',
+            name="Part",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=50)),
-                ('number', models.CharField(blank=True, max_length=50)),
-                ('logs', models.ManyToManyField(blank=True, related_name='parts', to='maintain.MileageLog')),
-                ('services', models.ManyToManyField(blank=True, related_name='parts', to='maintain.Service')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=50)),
+                ("number", models.CharField(blank=True, max_length=50)),
+                (
+                    "logs",
+                    models.ManyToManyField(
+                        blank=True, related_name="parts", to="maintain.MileageLog"
+                    ),
+                ),
+                (
+                    "services",
+                    models.ManyToManyField(
+                        blank=True, related_name="parts", to="maintain.Service"
+                    ),
+                ),
             ],
         ),
         migrations.AddField(
-            model_name='mileage_log',
-            name='car',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='logs', to='maintain.car'),
+            model_name="mileage_log",
+            name="car",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="logs",
+                to="maintain.car",
+            ),
         ),
     ]
