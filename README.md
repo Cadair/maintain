@@ -41,7 +41,7 @@ The application includes 2 *main* python files:
 By far the most time was spent planning the application's models and relationships (as expected).  A graphical diagram is provided of the apps seven (7) models:
 1. User
 2. Car
-3. Mileage_Log
+3. MileageLog
 4. Fuel
 5. Service
 6. Part
@@ -55,22 +55,22 @@ Django's Abstract User model is used to handel authenticating users.  Each User 
 Car:<br>
 Many-to-one relationship with User.  The app is built around the concept of a "default car" which makes the Car model the main access point for data.  Multiple properties and methods were built to easily access a car's logs and reminders (both upcoming and overdue), and return a car's current and starting mileages.
 
-Mileage_Log:<br>
-Many-to-one relationship with Car.  A Mileage_Log can be associated with either a Fuel amount, or a Service.  The Mileage_Log model is the only model tied directly to Car.  For example a Service cannot be assigned to a Car, rather a Service is assigned to a Mileage_Log which is associated with a Car.  This provides numerous advantages:
+MileageLog:<br>
+Many-to-one relationship with Car.  A MileageLog can be associated with either a Fuel amount, or a Service.  The MileageLog model is the only model tied directly to Car.  For example a Service cannot be assigned to a Car, rather a Service is assigned to a MileageLog which is associated with a Car.  This provides numerous advantages:
 - Prevent unnecessarily storing time and mileage data for services, parts, and fuel amounts separately.  All data is centralized.
 - Fuels and Services can be looked up (and ordered) by date or mileage, grouped together or separately.
 
 Fuel:<br>
-One-to-one relationship with Mileage_Log.  A one-to-one was used instead of assigning an optional attribute to Mileage_Log.  This prevents returning empty columns for Mileage_Logs associated with Services only.
+One-to-one relationship with MileageLog.  A one-to-one was used instead of assigning an optional attribute to MileageLog.  This prevents returning empty columns for MileageLogs associated with Services only.
 
 Service:<br>
-Many-to-one relationship with Mileage_Log.  Requires only a service name but can optionally be tied to multiple parts and one reminder.
+Many-to-one relationship with MileageLog.  Requires only a service name but can optionally be tied to multiple parts and one reminder.
 
 Part:<br>
 Many-to-many relationship with Services.  This allows one part to be assigned to multiple Services (tied to multiple Cars and Users) to be stored only once.  Django handles this [relationship](https://docs.djangoproject.com/en/3.1/ref/models/fields/#id1) by creating an "an intermediary join table".
 
 Reminder:<br>
-One-to-one relationship to Service.  Like Fuel to Mileage_Log, every Service may not have a Reminder.  This prevents unnecessary empty columns when querying.
+One-to-one relationship to Service.  Like Fuel to MileageLog, every Service may not have a Reminder.  This prevents unnecessary empty columns when querying.
 
 **views.py**<br>
 Django's main application routing.  

@@ -28,7 +28,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='part',
             name='logs',
-            field=models.ManyToManyField(blank=True, null=True, related_name='parts', to='maintain.Mileage_Log'),
+            field=models.ManyToManyField(blank=True, null=True, related_name='parts', to='maintain.MileageLog'),
         ),
         migrations.AlterField(
             model_name='part',

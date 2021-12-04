@@ -60,14 +60,14 @@ class Car(models.Model):
         return (Reminder.objects.filter(service__log__car = self).filter(completed = False)
         .filter(Q(date__gte = date.today()) | Q(date__isnull = True))
         .filter(Q(mileage__gte = self.current_mileage) | Q(mileage__isnull = True))
-        .filter(Q(date__lte = date.today() + upcoming_time_delta) | 
+        .filter(Q(date__lte = date.today() + upcoming_time_delta) |
         Q(mileage__lte = self.current_mileage + upcoming_mileage_delta)))
 
     # Return all past due reminders
     @property
     def get_reminders_overdue(self):
         return (Reminder.objects.filter(service__log__car = self).filter(completed = False)
-        .filter(Q(date__lte = date.today() - timedelta(days=1)) | 
+        .filter(Q(date__lte = date.today() - timedelta(days=1)) |
         Q(mileage__lte = self.current_mileage - 1)))
 
     @property
@@ -86,8 +86,9 @@ class Car(models.Model):
             "current mileage": self.current_mileage,
             "purchase date": self.purchase_date,
         }
-    
-class Mileage_Log(models.Model):
+
+
+class MileageLog(models.Model):
     timestamp = models.DateField(default=date.today())
     mileage = models.PositiveIntegerField()
     car = models.ForeignKey("Car", on_delete=models.CASCADE, related_name="logs")
@@ -95,16 +96,17 @@ class Mileage_Log(models.Model):
     def __str__(self):
         return f"{self.mileage}, {self.car}"
 
+
 class Fuel(models.Model):
     amount = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
-    log = models.OneToOneField("Mileage_Log", on_delete=models.CASCADE, related_name="fuel")
+    log = models.OneToOneField("MileageLog", on_delete=models.CASCADE, related_name="fuel")
 
     def __str__(self):
         return f"{self.amount}, {self.log}"
 
 class Service(models.Model):
     name = models.CharField(max_length=50)
-    log = models.ForeignKey("Mileage_Log", on_delete=models.CASCADE, related_name="services")
+    log = models.ForeignKey("MileageLog", on_delete=models.CASCADE, related_name="services")
 
     def __str__(self):
         return f"{self.name}, {self.log}"

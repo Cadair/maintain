@@ -8,7 +8,7 @@ from django.db import IntegrityError
 from django.db.models import F, Q
 from datetime import datetime, date, timedelta
 
-from .models import User, Car, Mileage_Log, Fuel, Service, Part, Reminder
+from .models import User, Car, MileageLog, Fuel, Service, Part, Reminder
 
 # Create your views here.
 
@@ -34,7 +34,7 @@ def index(request):
 
         # Create first mileage log
         current_mile = request.POST["current-mile"]
-        log = Mileage_Log(mileage=current_mile, timestamp=date.today(), car=car)
+        log = MileageLog(mileage=current_mile, timestamp=date.today(), car=car)
         log.save()
 
         # Set new car as default
@@ -108,7 +108,7 @@ def car_mileage_view(request):
 
     # Mileage log form submission
     if request.method == "POST":
-        
+
         # Parse form data
         mileage = request.POST["mileage"]
         fuel = request.POST["fuel"]
@@ -118,7 +118,7 @@ def car_mileage_view(request):
         log_date = date(year=year, month=month, day=day)
 
         # Create new mileage/fuel log
-        log = Mileage_Log(timestamp=log_date, mileage=mileage, car=car)
+        log = MileageLog(timestamp=log_date, mileage=mileage, car=car)
         log.save()
         fuel = Fuel(amount=fuel, log=log)
         fuel.save()
@@ -127,7 +127,7 @@ def car_mileage_view(request):
 
     # Return mileage page
     else:
-        
+
         # Get overdue reminders (for alert)
         overdue_reminders = car.get_reminders_overdue
         return render(request, "maintain/car_mileage.html", {
@@ -142,7 +142,7 @@ def car_service_view(request):
     car = get_default_car(request)
     if not car:
         return redirect(reverse("index"))
-    
+
     # New submission from service form
     if request.method == "POST":
 
@@ -157,7 +157,7 @@ def car_service_view(request):
 
         # Parse mileage (positive integer)
         mileage = int(request.POST["mileage"])
-        mile_log = Mileage_Log(timestamp=log_date, mileage=mileage, car=car)
+        mile_log = MileageLog(timestamp=log_date, mileage=mileage, car=car)
         mile_log.save()
 
         # Create service
@@ -230,13 +230,13 @@ def set_default_car(request, car_id):
 
 def update_default_car(request, car):
     """ Helper: Set/update car in the database and request session """
-    
+
     # Check database for previous default car and clear
     def_car = request.user.default_car
     if def_car:
         def_car.default = False
         def_car.save()
-    
+
     # Set car as default
     car.default = True
     car.save()
@@ -298,7 +298,7 @@ def service_data(request):
             reminder = Reminder.objects.get(service__log__car=car, id=rem_id)
         except Reminder.DoesNotExist:
             return JsonResponse({"error": "Invalid request"}, status=400)
-        
+
         # Serialize reminder and return data
         reminder_data = reminder.serialize()
         return JsonResponse(json.dumps(reminder_data), safe=False)

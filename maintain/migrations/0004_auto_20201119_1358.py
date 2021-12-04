@@ -12,7 +12,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Mileage_Log',
+            name='MileageLog',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('timestamp', models.DateTimeField(auto_created=True)),
@@ -39,7 +39,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=50)),
-                ('logs', models.ManyToManyField(related_name='services', to='maintain.Mileage_Log')),
+                ('logs', models.ManyToManyField(related_name='services', to='maintain.MileageLog')),
             ],
         ),
         migrations.CreateModel(
@@ -48,7 +48,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=50)),
                 ('number', models.CharField(blank=True, max_length=50)),
-                ('logs', models.ManyToManyField(blank=True, related_name='parts', to='maintain.Mileage_Log')),
+                ('logs', models.ManyToManyField(blank=True, related_name='parts', to='maintain.MileageLog')),
                 ('services', models.ManyToManyField(blank=True, related_name='parts', to='maintain.Service')),
             ],
         ),
