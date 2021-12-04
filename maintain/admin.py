@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import User, Car, MileageLog, Fuel, Service, Part, Reminder
+
+from .models import Car, Fuel, MileageLog, Part, Reminder, Service, User
 
 
 class CarAdmin(admin.ModelAdmin):

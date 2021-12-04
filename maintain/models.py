@@ -1,7 +1,8 @@
-from django.db import models
-from django.db.models import Q, F
+from datetime import date, timedelta
+
 from django.contrib.auth.models import AbstractUser
-from datetime import datetime, date, timedelta
+from django.db import models
+from django.db.models import F, Q
 
 # Create your models here.
 

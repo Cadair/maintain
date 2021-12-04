@@ -1,14 +1,14 @@
 import csv
 import json
-from django.shortcuts import render, redirect, reverse
-from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
+from datetime import date, timedelta
+
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
-from django.db.models import F, Q
-from datetime import datetime, date, timedelta
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import redirect, render, reverse
 
-from .models import User, Car, MileageLog, Fuel, Service, Part, Reminder
+from .models import Car, Fuel, MileageLog, Part, Reminder, Service, User
 
 # Create your views here.
 

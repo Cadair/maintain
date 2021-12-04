@@ -64,7 +64,7 @@ function addPart() {
         input.name = name;
         input.value = "";
     }
-    
+
     // Add part to end of partGroup
     partGroup.append(part)
 }
@@ -95,7 +95,7 @@ function getService() {
             })
         }
     );
-    
+
     // Fetch service data and call fillServiceForm()
     fetch(request)
     .then(response => response.json())
@@ -150,7 +150,7 @@ function fillServiceForm(data, remID) {
 /* Reset service form when Bootstrap modal is closed */
 $('#NewServiceModal').on('hidden.bs.modal', function () {
     resetForm()
-})    
+})
 
 function resetForm() {
 

@@ -21,7 +21,7 @@ if (document.getElementById('mileage-plot')) {
             })
         }
     );
-    
+
     // Fetch plot data
     fetch(request)
     .then(response => response.json())
@@ -50,7 +50,7 @@ if (document.getElementById('mileage-plot')) {
                 }
                 plotData.push(data_obj)
             })
-            
+
             // Create the plot via chart.js
             const ctx = document.getElementById('mileage-plot').getContext('2d');
             const lineChart = new Chart(ctx, {

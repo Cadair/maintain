@@ -73,7 +73,7 @@ Reminder:<br>
 One-to-one relationship to Service.  Like Fuel to MileageLog, every Service may not have a Reminder.  This prevents unnecessary empty columns when querying.
 
 **views.py**<br>
-Django's main application routing.  
+Django's main application routing.
 
 Authentication:<br>
 Login, register, and logout views follow the authentication methods provided in the Django [documentation](https://docs.djangoproject.com/en/3.1/topics/auth/default/#using-the-django-authentication-system).
@@ -88,7 +88,7 @@ Export CSV Data:<br>
 The user has the option to export their service logs to csv.  The csv_data view parses the user's service logs in reverse chronological order, and writes a csv file using Python's csv module.  The Content-Disposition header in the response is set to "attachment", and the user's browser prompts the user to save the file.
 
 Helper Functions:<br>
-In addition to the main views, helper functions were created.  As stated, the site is built around the concept of a "default car".  To make manipulating the default car easier, functions to set, update, and get the default car were created.  
+In addition to the main views, helper functions were created.  As stated, the site is built around the concept of a "default car".  To make manipulating the default car easier, functions to set, update, and get the default car were created.
 
 #### Javascript
 
