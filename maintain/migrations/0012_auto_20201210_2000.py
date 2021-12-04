@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RenameField(
-            model_name="mileage_log",
+            model_name="mileagelog",
             old_name="timestamp_date",
             new_name="timestamp",
         ),

@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RemoveField(
-            model_name="mileage_log",
+            model_name="mileagelog",
             name="timestamp",
         ),
     ]

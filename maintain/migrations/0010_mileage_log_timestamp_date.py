@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AddField(
-            model_name="mileage_log",
+            model_name="mileagelog",
             name="timestamp_date",
             field=models.DateField(default=datetime.date(2020, 12, 10)),
         ),

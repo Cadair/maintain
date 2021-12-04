@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RemoveField(
-            model_name="mileage_log",
+            model_name="mileagelog",
             name="gas_amount",
         ),
         migrations.RemoveField(
@@ -31,7 +31,7 @@ class Migration(migrations.Migration):
                 default="1",
                 on_delete=django.db.models.deletion.CASCADE,
                 related_name="services",
-                to="maintain.mileage_log",
+                to="maintain.mileagelog",
             ),
             preserve_default=False,
         ),
@@ -88,7 +88,7 @@ class Migration(migrations.Migration):
                     models.OneToOneField(
                         on_delete=django.db.models.deletion.CASCADE,
                         related_name="fuel",
-                        to="maintain.mileage_log",
+                        to="maintain.mileagelog",
                     ),
                 ),
             ],

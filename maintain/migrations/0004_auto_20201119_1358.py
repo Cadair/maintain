@@ -95,7 +95,7 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.AddField(
-            model_name="mileage_log",
+            model_name="mileagelog",
             name="car",
             field=models.ForeignKey(
                 on_delete=django.db.models.deletion.CASCADE,

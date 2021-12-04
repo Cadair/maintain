@@ -21,7 +21,7 @@ class Migration(migrations.Migration):
             field=models.CharField(blank=True, max_length=6, null=True),
         ),
         migrations.AlterField(
-            model_name="mileage_log",
+            model_name="mileagelog",
             name="gas_amount",
             field=models.DecimalField(
                 blank=True, decimal_places=2, max_digits=5, null=True
