@@ -35,11 +35,11 @@ if (document.getElementById('mileage-plot')) {
             const jsonData = JSON.parse(data);
 
             // Establish list of colors for plot data
-            const colorList = ['rgba(255, 77, 77)', 'rgba(77, 130, 255)', 'rgba(77, 255, 97)', 'rgba(252, 255, 77)']
-            const l = colorList.length
+            const colorList = ['rgba(255, 77, 77)', 'rgba(77, 130, 255)', 'rgba(77, 255, 97)', 'rgba(252, 255, 77)'];
+            const l = colorList.length;
 
             // Create list of dataset objects for plotting
-            const plotData = []
+            const plotData = [];
             jsonData.forEach((obj, i) => {
                 data_obj = {
                     label: obj["label"],
@@ -47,9 +47,9 @@ if (document.getElementById('mileage-plot')) {
                     fill: false,
                     backgroundColor: colorList[i - l * Math.trunc(i/l)], // Loop through colors in colorList
                     borderColor: colorList[i - l * Math.trunc(i/l)],
-                }
-                plotData.push(data_obj)
-            })
+                };
+                plotData.push(data_obj);
+            });
 
             // Create the plot via chart.js
             const ctx = document.getElementById('mileage-plot').getContext('2d');
@@ -75,5 +75,5 @@ if (document.getElementById('mileage-plot')) {
                 }
             });
         }
-    })
+    });
 }

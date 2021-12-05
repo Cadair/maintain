@@ -11,8 +11,6 @@ from django.shortcuts import redirect, render, reverse
 from .forms import MileageForm, PartFormSet, ReminderForm, ServiceForm
 from .models import Car, Fuel, MileageLog, Part, Reminder, Service, User
 
-# Create your views here.
-
 
 @login_required(login_url="login")
 def index(request):
