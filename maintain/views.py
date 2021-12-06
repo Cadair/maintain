@@ -2,6 +2,7 @@ import csv
 import json
 from datetime import date, timedelta
 
+from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
@@ -109,7 +110,9 @@ def register_view(request):
         login(request, user)
         return redirect(reverse("index"))
     else:
-        return render(request, "maintain/register.html")
+        if settings.MAINTAIN_REGISTRATION_ENABLED:
+            return render(request, "maintain/register.html")
+        return redirect(reverse("index"))
 
 
 def logout_view(request):
