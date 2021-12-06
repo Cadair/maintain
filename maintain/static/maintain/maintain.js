@@ -29,11 +29,11 @@ function setDefaultCar(event) {
         if (response.ok) {
 
             // Route to original anchor href
-            const childAnchor = this.children
-            const href = childAnchor[0].href
+            const childAnchor = this.children;
+            const href = childAnchor[0].href;
             window.location.href = href;
         };
-    })
+    });
 };
 
 /* Add a part to the service form */
@@ -95,10 +95,10 @@ function getService() {
 function fillServiceForm(data, remID) {
 
     // Parse data
-    const serviceName = data["service"]["name"]
-    const reminderDuration = data["reminder"]["duration"]
-    const reminderMileAmount = data["reminder"]["mile-amount"]
-    const partsList = data["service"]["parts"]
+    const serviceName = data["service"]["name"];
+    const reminderDuration = data["reminder"]["duration"];
+    const reminderMileAmount = data["reminder"]["mile-amount"];
+    const partsList = data["service"]["parts"];
 
     // Add reminder and service to form
     const form = document.getElementById("service-form");
@@ -110,16 +110,16 @@ function fillServiceForm(data, remID) {
     remMile.value = reminderMileAmount;
 
     // Create additional parts in form
-    const numParts = partsList.length
+    const numParts = partsList.length;
     for (let i=0; i < numParts-1; i++) {
         addPart();
     };
 
     // Add part data to form
     for (let i=0; i < numParts; i++) {
-        let partName = form.querySelector(`[name='part-name-${i+1}']`)
+        let partName = form.querySelector(`[name='part-name-${i+1}']`);
         partName.value = partsList[i]["name"];
-        let partNum = form.querySelector(`[name='part-number-${i+1}']`)
+        let partNum = form.querySelector(`[name='part-number-${i+1}']`);
         partNum.value = partsList[i]["number"];
     };
 
@@ -130,8 +130,8 @@ function fillServiceForm(data, remID) {
 
 /* Reset service form when Bootstrap modal is closed */
 $('#NewServiceModal').on('hidden.bs.modal', function () {
-    resetForm()
-})
+    resetForm();
+});
 
 function resetForm() {
 
@@ -143,6 +143,6 @@ function resetForm() {
     const partGroup = form.querySelector("#part-group");
     const partNodes = partGroup.children;
     while (partNodes.length > 1) {
-        partNodes[1].remove()
+        partNodes[1].remove();
     }
 }
