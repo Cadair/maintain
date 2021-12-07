@@ -1,7 +1,4 @@
-# Capstone Project
-CS50's Web Programming with Python and JavaScript
-
-## Application Name: Maintain
+# Maintain
 Maintain is a Django application built to log and track a user's vehicle maintenance.<br>
 
 Key Features:
@@ -9,6 +6,21 @@ Key Features:
 - Remind user of upcoming and overdue maintenance intervals
 - Plot vehicle mileage
 - Allow user to download service data to csv
+
+
+This version is forked from the [original](https://github.com/Hippl-Eric/maintain) version by Eric Hippler.
+The main changes made are:
+
+  - Some code cleaning and formatting.
+  - Transition to use django `Form` classes for parsing form submissions. (Incomplete)
+  - Addition of a Dockerfile for deployment.
+
+Future improvements I might make include:
+
+  - Display fuel consumption per tank / over time.
+  - Send notifications to [matrix](matrix.org) when service intervals are approaching.
+
+<hr>
 
 ### Table of Contents
 
