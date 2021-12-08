@@ -204,7 +204,7 @@ def car_service_view(request):
                 reminder_date = service_data["date"] + timedelta(days=duration)
                 reminder.date = reminder_date
             if reminder_data["miles"]:
-                reminder.mileage = reminder_data["miles"]
+                reminder.mileage = service_data["mileage"] + reminder_data["miles"]
             reminder.save()
 
         return redirect(reverse("car_service"))
