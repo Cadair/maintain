@@ -138,8 +138,9 @@ def car_mileage_view(request):
             # Create new mileage/fuel log
             log = MileageLog(timestamp=data["date"], mileage=data["mileage"], car=car)
             log.save()
-            fuel = Fuel(amount=data["fuel"], log=log)
-            fuel.save()
+            if data["fuel"]:
+                fuel = Fuel(amount=data["fuel"], log=log)
+                fuel.save()
 
         return redirect(reverse("car_mileage"))
 
