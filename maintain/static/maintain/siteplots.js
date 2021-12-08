@@ -10,15 +10,11 @@ if (document.getElementById('mileage-plot')) {
 
     // Create request to get mileage data to plot
     const request = new Request(
-        "/plotlogs",
+        `/plotmileage?car=${carType}`,
         {
-            method: "PUT",
+            method: "GET",
             headers: {'X-CSRFToken': csrftoken},
             mode: "same-origin",
-            body: JSON.stringify({
-                type: plotType,
-                car: carType,
-            })
         }
     );
 

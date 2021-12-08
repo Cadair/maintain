@@ -19,6 +19,7 @@ def index(request):
     # Add new car
     if request.method == "POST":
 
+        # TODO: Convert to Form
         # Parse new car form data
         make = request.POST["make"]
         model = request.POST["model"]
@@ -67,6 +68,7 @@ def index(request):
 
 def login_view(request):
     if request.method == "POST":
+        # TODO: Convert to Form
         username = request.POST["username"]
         password = request.POST["password"]
         user = authenticate(request, username=username, password=password)
@@ -85,6 +87,7 @@ def login_view(request):
 
 def register_view(request):
     if request.method == "POST":
+        # TODO: Convert to Form
         username = request.POST["username"]
 
         # Ensure password matches confirmation
@@ -182,7 +185,6 @@ def car_service_view(request):
         service_data = service_form.cleaned_data
         parts_data = parts_form.cleaned_data
         reminder_data = reminder_form.cleaned_data
-        print(service_data, parts_data, reminder_data)
 
         mile_log = MileageLog(
             timestamp=service_data["date"], mileage=service_data["mileage"], car=car
@@ -271,38 +273,6 @@ def get_default_car(request):
         return car
     except Car.DoesNotExist:
         return None
-
-
-def mileage_logs(request):
-    """JS: Return mileage log data used for plotting"""
-    if request.method == "PUT":
-
-        # Load request data
-        data = json.loads(request.body)
-
-        # Determine whether default car or all cars
-        if data.get("car") == "default":
-            cars = [get_default_car(request)]
-        if data.get("car") == "all":
-            cars = request.user.cars.all()
-
-        # Plot total mileage
-        if data.get("type") == "miles":
-            data = []
-            for car in cars:
-                logs = car.get_logs
-                obj = {
-                    "label": f"{car.make} {car.model}",
-                    "data": [
-                        {"x": str(log.timestamp), "y": log.mileage} for log in logs
-                    ],
-                }
-                data.append(obj)
-            return JsonResponse(json.dumps(data), safe=False)
-
-    # PUT method required
-    else:
-        return JsonResponse({"error": "PUT request required."}, status=400)
 
 
 def service_data(request):
