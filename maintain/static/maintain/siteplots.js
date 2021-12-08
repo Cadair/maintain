@@ -17,7 +17,7 @@ if (document.getElementById('mileage-plot')) {
             mode: "same-origin",
             body: JSON.stringify({
                 type: plotType,
-                caar: carType,
+                car: carType,
             })
         }
     );
